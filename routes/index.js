@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
-/* GET homepage with id */
+/* GET songs with key words */
 router.get('/songs/:id', function(req, res, next) {
     var results = [Object];
     rp('http://m.nhaccuatui.com/tim-kiem/bai-hat?q=' + req.params.id)
@@ -27,20 +27,30 @@ router.get('/songs/:id', function(req, res, next) {
     .catch(function (err) {
         console.log(err);
     });
+});
 
-
-    // request('http://m.nhaccuatui.com/tim-kiem/bai-hat?q=' + req.params.id, function (error, response, body) {
-    //     const $ = cheerio.load(body);
-    //     $('.bgmusic h3 a').each(function(i, elem) {
-    //         var link = $(this).attr('href');
-    //         var title = $(this).attr('title')
-    //         songs[i] =  {
-    //             link : link,
-    //             title: title
-    //         }
-    //     });
-    //     res.send(results);
-    // });
+/* GET playlists with key words */
+router.get('/playlists/:id', function(req, res, next) {
+    var results = [Object];
+    rp('http://m.nhaccuatui.com/tim-kiem/playlist?q=' + req.params.id)
+    .then(function (htmlString) {
+        const $ = cheerio.load(htmlString);
+        var temp = Object;
+        $('.img-40 a').each(function(i, elem) {
+            var link = $(this).attr('href');
+            var title = $(this).attr('title');
+            var imgURL = $(this).children('img').attr('src');
+            results[i] =  {
+                link : link,
+                title: title,
+                imgURL: imgURL
+            }
+        });
+        res.send(results);
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
 });
 
 module.exports = router;
