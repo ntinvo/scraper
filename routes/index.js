@@ -14,12 +14,14 @@ router.get('/songs/:id', function(req, res, next) {
     rp('http://m.nhaccuatui.com/tim-kiem/bai-hat?q=' + req.params.id)
     .then(function (htmlString) {
         const $ = cheerio.load(htmlString);
-        $('.bgmusic h3 a').each(function(i, elem) {
-            var link = $(this).attr('href');
-            var title = $(this).attr('title')
+        $('.bgmusic h3').each(function(i, elem) {
+            var link = $(this).children('a').attr('href');
+            var title = $(this).children('a').attr('title');
+            var artist = $(this).siblings('p').children('img').attr('alt');
             results[i] =  {
                 link : link,
-                title: title
+                title: title,
+                artist: artist
             }
         });
         res.send(results);
