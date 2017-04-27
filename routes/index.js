@@ -9,7 +9,6 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
-
 /*######################################################################*/
 /************************************************************************/
 /*                                CSN                                   */
@@ -61,7 +60,11 @@ router.get('/csn/getSong/:url', function(req, res, next) {
         var link = '', title = '', lyric = '';
         var artist = '', artistLinkSearch = '', artistImgUrl = '';
         var isVideo = false;
+
+        // Load htmlString to Cheerio
         const $ = cheerio.load(htmlString);
+
+        // Parse
         var tokens = $('#csn_jplayer').next().text().split('\t');
         for (var i = 0; i < tokens.length; i++) {
             if(tokens[i].indexOf('title') != -1) {
@@ -70,13 +73,35 @@ router.get('/csn/getSong/:url', function(req, res, next) {
                 link = tokens[i].split('\"')[1];
             }
         }
+
+        // Check if link is video or audio
+        if(link.endsWith('.mp4.csn')) {
+            isVideo = true;
+        }
+
+        // Get download link
+        var temp = link.split('/');
+        link = link.replace('/' + temp[temp.length - 2] + '/', '/128/');
+        link = link.replace('stream', 'downloads');
+        link = link.replace('.csn', '');
+        var lastIndexOfDot = link.lastIndexOf('.');
+        if(isVideo) {
+            link = [link.slice(0, lastIndexOfDot), '%20[MP4%20MV%20480p]', link.slice(lastIndexOfDot)].join('');
+        } else {
+            link = link.replace('.m4a', '.mp3');
+            link = [link.slice(0, lastIndexOfDot), '%20[MP3%20' + temp[temp.length - 2] + '320kbps]', link.slice(lastIndexOfDot)].join('');
+        }
+
+        // Remove span tag in lyric
         $('#fulllyric .genmed').last().children('span').remove();
+
+        // Get songs' props
         artist = $('.genmed b a').first().text();
         artistLinkSearch = $('.genmed b a').first().attr('href');
         artistImgUrl = $('link[rel="image_src"]').attr('href');
         lyric = $('#fulllyric .genmed').last().text();
-        lyric = lyric.substring(0, lyric.indexOf('<span')) + lyric.substring(lyric.indexOf('</span>'))
-        console.log(lyric);
+
+        // Fill in the result
         results[0] = {
             title: title,
             link: link,
@@ -198,10 +223,17 @@ router.get('/nct/playlists/:keyWords', function(req, res, next) {
 //     });
 // });
 
-
 module.exports = router;
 
-
-// http://data02.chiasenhac.com/stream/90/4/89567-ff63cd5c/128/Tim%20Em%20Trong%20Ky%20Uc%20-%20Noo%20Phuoc%20Thinh.mp3.csn
+// http://data02.chiasenhac.com/stream   /90/4/89567-ff63cd5c/128/Tim%20Em%20Trong%20Ky%20Uc%20-%20Noo%20Phuoc%20Thinh.mp3.csn
 // http://data02.chiasenhac.com/downloads/90/4/89567-ff63cd5c/320/Tim%20Em%20Trong%20Ky%20Uc%20-%20Noo%20Phuoc%20Thinh%20[MP3%20320kbps].mp3
-// http://data2.chiasenhac.com/stream/1613/4/1612439-93209522/32/Lien%20Khuc_%20Gia%20Vo%20Yeu_%20Say%20You%20Do%20-%20Ngo.m4a.csn
+// http://data03.chiasenhac.com/stream   /1531/4/1530200-d4e8f77b/32 /Chua%20Bao%20Gio%20-%20Trung%20Quan                  .m4a.csn
+// http://data03.chiasenhac.com/downloads/1531/4/1530200-d4e8f77b/320/Chua%20Bao%20Gio%20-%20Trung%20Quan%20[MP3%20320kbps].mp3
+// http://data03.chiasenhac.com/downloads/1531/4/1530200-d4e8f77b/32/Chua%20Bao%20Gio%20-%20Trung%20Quan%20[M4A%2032kbps].m4a
+// http://data.chiasenhac.com/stream   /1780/4/1779589-c8b3b5b7/128/Neu%20Duoc%20Lam%20Nguoi%20Tinh%20-%20Quynh%20Trang.mp4.csn
+// http://data.chiasenhac.com/downloads/1780/4/1779589-c8b3b5b7/320/Neu%20Duoc%20Lam%20Nguoi%20Tinh%20-%20Quynh%20Trang%20[MP4%20MV%20480p].mp4
+
+
+// http://data3.chiasenhac.com/downloads/444/4/443033-986d990b/320/Ky%20Uc%20Trong%20Anh%20-%20Quoc%20Ha%20[MP3%20320kbps].mp3
+// http://data3.chiasenhac.com/downloads/444/4/443033-986d990b/128/Ky%20Uc%20Trong%20Anh%20-%20Quoc%20Ha%20[MP3%20128kbps].mp3
+// http://data3.chiasenhac.com/downloads/444/4/443033-986d990b/32/Ky%20Uc%20Trong%20Anh%20-%20Quoc%20Ha%20[MP3%2032320kbps].mp3
