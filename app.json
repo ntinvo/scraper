@@ -1,0 +1,7 @@
+{
+    "name": "Scraper",
+    "description": "Music Scraper App",
+    "repository": "https://github.com/tinnvo/scraper",
+    "keywords": ["node", "express", "static"],
+    "image": "heroku/nodejs"
+}
