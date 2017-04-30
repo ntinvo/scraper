@@ -28,7 +28,8 @@ app.use(cors({
         'https://tinnvo.github.io/muzik/#/home',
         'github.com',
         'google.com',
-        'http://localhost:8080/'
+        'http://localhost:8080/',
+        'https://tinnvo.github.io'
     ]
 }))
 app.use('/', index);
