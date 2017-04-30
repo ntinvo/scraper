@@ -25,7 +25,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     allowedOrigins: [
-        'github.com', 'google.com', 'http://localhost:8080/'
+        'https://tinnvo.github.io/muzik/#/home',
+        'github.com',
+        'google.com',
+        'http://localhost:8080/'
     ]
 }))
 app.use('/', index);
