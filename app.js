@@ -35,14 +35,6 @@ app.use(cors({
 app.use('/', index);
 app.use('/users', users);
 
-// add headers
-// app.use(function (req, res, next) {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.header('Access-Control-Allow-Headers', 'content-type');
-//     next();
-// });
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

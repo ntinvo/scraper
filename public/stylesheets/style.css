@@ -1,8 +1,30 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@font-face {
+    font-family: 'Sketch';
+    src: url(../fonts/sketch-block/Sketch_Block.ttf);
 }
 
-a {
-  color: #00B7FF;
+html {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.75),rgba(0, 0, 0, 0.75)), url(../images/bg.jpg);
+    font: 'Sketch', 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+p {
+    font-family: 'Sketch';
+    font-size: 100px;
+    color: #ecf0f1;
+    text-shadow: 1px 1px 5px;
 }
